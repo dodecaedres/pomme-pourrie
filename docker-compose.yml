@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      # Dockerfile is in the context directory (project root) by default
+      # dockerfile: Dockerfile
+    ports:
+      - "8000:8000" # Map host port 8000 to container port 8000
+    volumes:
+      # For development: mount the current directory into the container at /app
+      # This allows live reloading if uvicorn is run with --reload.
+      # For production, this volume mount should typically be removed,
+      # and the code should be copied into the image via the Dockerfile's COPY instruction.
+      - ./sass_legal:/app/sass_legal
+      # If your .env file is at the root of the project (where docker-compose.yml is)
+      # and contains runtime specific configurations not meant for the image itself.
+      # The Dockerfile's settings are for build-time or defaults.
+    env_file:
+      - .env.example # Load environment variables from .env.example by default
+                     # For actual deployment, you would use a .env file (not committed)
+                     # or manage environment variables through your orchestration platform.
+
+    # Overriding the CMD from Dockerfile for development if needed (e.g., to add --reload)
+    # command: uvicorn sass_legal.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+    # Healthcheck (optional, but good practice)
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/"] # Check root endpoint
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 30s # Give time for app to start
+
+    # Add other necessary configurations like depends_on for databases, networks, etc.
+    # networks:
+    #   - app-network
+
+# Define networks (optional)
+# networks:
+#   app-network:
+#     driver: bridge

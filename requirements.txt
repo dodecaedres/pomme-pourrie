@@ -5,3 +5,10 @@ pytest
 fastapi
 uvicorn[standard]
 pydantic
+pydantic-settings
+slowapi
+httpx
+python-multipart
+pytest-asyncio
+flake8
+black
